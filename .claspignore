@@ -1,4 +1,8 @@
-node_modules/
-*.md
-.git/
-.env
+**/**
+!appsscript.json
+!**/*.gs
+!**/*.js
+!**/*.ts
+!**/*.html
+.git/**
+node_modules/**
