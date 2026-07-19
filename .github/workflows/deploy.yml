@@ -3,12 +3,15 @@ name: Deploy to Google Apps Script
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -19,9 +22,14 @@ jobs:
         run: npm install -g @google/clasp
 
       - name: Write clasp credentials
-        run: |
-          echo '${{ secrets.CLASP_CREDENTIALS }}' > ~/.clasprc.json
+        run: echo "$CLASPRC_JSON" > ~/.clasprc.json
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
 
-      - name: Push to GAS
+      - name: Push source to Apps Script
         run: clasp push --force
-        working-directory: ./src
+
+      - name: Redeploy live web app
+        run: clasp deploy --deploymentId "$GAS_DEPLOYMENT_ID" --description "GitHub Actions deploy ${GITHUB_SHA}"
+        env:
+          GAS_DEPLOYMENT_ID: ${{ secrets.GAS_DEPLOYMENT_ID }}
