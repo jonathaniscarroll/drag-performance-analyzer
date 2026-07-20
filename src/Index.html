@@ -1,1511 +1,561 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Archive Epiaesthetic Matrix</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drag Cass-essment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg: #050505;
-      --panel: #111111;
-      --panel-2: #181818;
-      --paper: #ffffff;
-      --ink: #0a0a0a;
-      --line: #d9d9d9;
-      --muted: #bdbdbd;
-      --focus: #9ae6ff;
-      --pink: #ff7ad9;
-      --yellow: #ffe066;
-      --green: #8ef0b5;
-      --danger: #ff8c8c;
-    }
+  :root {
+    --paper:    #f5f2eb;
+    --paper-2:  #ede9df;
+    --ink:      #1a1714;
+    --ink-muted:#6b6760;
+    --ink-faint:#b0ada8;
+    --lilac:    #9b6fb5;
+    --lilac-lt: #e8daf2;
+    --magenta:  #c44d8a;
+    --divider:  #d8d3c8;
+    --radius:   4px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Work Sans', system-ui, sans-serif;
+  }
 
-    body {
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--paper);
-      min-height: 100vh;
-      padding: 24px;
-    }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100dvh;
+  }
 
-    .container {
-      max-width: 1500px;
-      margin: 0 auto;
-    }
+  header {
+    border-bottom: 1.5px solid var(--divider);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: var(--paper);
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-style: italic;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--lilac); }
+  .tagline {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  nav { margin-left: auto; display: flex; gap: 0.5rem; }
+  nav button {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--divider);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 180ms ease;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  nav button.active, nav button:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
 
-    header {
-      border: 2px solid var(--paper);
-      padding: 18px 20px;
-      margin-bottom: 24px;
-      background: #000;
-    }
+  main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-    header h1 {
-      font-size: clamp(1.6rem, 4vw, 3rem);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-    }
+  .panel { display: none; }
+  .panel.active { display: block; }
 
-    header p {
-      color: var(--muted);
-      line-height: 1.5;
-      max-width: 1000px;
-    }
+  .section-head {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-style: italic;
+    margin-bottom: 0.25rem;
+    color: var(--ink);
+  }
+  .section-sub {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--divider);
+    padding-bottom: 0.75rem;
+  }
 
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 24px;
-      align-items: start;
-    }
+  label {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.3rem;
+    margin-top: 1rem;
+  }
+  input[type="text"], textarea, select {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 0.55rem 0.8rem;
+    background: var(--paper-2);
+    border: 1px solid var(--divider);
+    border-radius: var(--radius);
+    color: var(--ink);
+    transition: border-color 180ms ease;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--lilac);
+  }
+  textarea { resize: vertical; min-height: 80px; }
 
-    @media (max-width: 1200px) {
-      .main-grid { grid-template-columns: 1fr; }
-    }
+  #dimensions-container { margin: 1.5rem 0; }
+  .dim-row {
+    background: var(--paper-2);
+    border: 1px solid var(--divider);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.75rem;
+  }
+  .dim-poles {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.03em;
+  }
+  .dim-poles .pole-a { color: var(--lilac); font-weight: 500; }
+  .dim-poles .pole-b { color: var(--magenta); font-weight: 500; }
+  .dim-desc {
+    font-size: 0.73rem;
+    color: var(--ink-faint);
+    margin-bottom: 0.6rem;
+    font-style: italic;
+  }
+  .dim-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--lilac), var(--paper-2), var(--magenta));
+    outline: none;
+    cursor: pointer;
+  }
+  .dim-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 2px solid var(--paper);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 180ms ease;
+  }
+  .dim-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .dim-val {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    margin-top: 0.3rem;
+  }
 
-    .panel {
-      background: var(--panel);
-      border: 2px solid var(--paper);
-      padding: 18px;
-    }
+  .btn {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 180ms ease;
+    margin-top: 1.2rem;
+  }
+  .btn-primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .btn-primary:hover { background: #3a3530; }
+  .btn-ghost { background: transparent; color: var(--ink-muted); border-color: var(--divider); }
+  .btn-ghost:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .btn-lilac { background: var(--lilac-lt); color: var(--lilac); border-color: var(--lilac); }
+  .btn-lilac:hover { background: var(--lilac); color: #fff; }
 
-    .panel h2 {
-      font-size: 1.15rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 10px;
-    }
+  #status {
+    margin-top: 1rem;
+    font-size: 0.82rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius);
+    display: none;
+  }
+  #status.ok  { background: #e6f4ea; color: #2e6e40; border: 1px solid #b6dfbc; display: block; }
+  #status.err { background: #fdecea; color: #8b1a1a; border: 1px solid #f5c2c0; display: block; }
 
-    .tab-nav {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
+  #archive-list { margin-top: 1.5rem; display: grid; gap: 0.75rem; }
+  .arc-card {
+    background: var(--paper-2);
+    border: 1px solid var(--divider);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: pointer;
+    transition: border-color 180ms ease;
+  }
+  .arc-card:hover { border-color: var(--lilac); }
+  .arc-name { font-family: var(--font-display); font-size: 1.05rem; font-style: italic; }
+  .arc-meta { font-size: 0.75rem; color: var(--ink-muted); margin-top: 0.15rem; }
+  .arc-id { font-size: 0.65rem; color: var(--ink-faint); margin-left: auto; white-space: nowrap; padding-top: 0.2rem; }
 
-    .tab-btn {
-      background: #000;
-      color: var(--paper);
-      border: 1px solid var(--paper);
-      border-radius: 0;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
+  .dim-manage-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr auto;
+    gap: 0.5rem;
+    align-items: end;
+    margin-bottom: 0.75rem;
+  }
+  .existing-dims { margin: 1.5rem 0; }
+  .existing-dim-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--divider);
+    color: var(--ink-muted);
+  }
+  .existing-dim-item .poles { color: var(--ink); font-weight: 500; }
 
-    .tab-btn.active {
-      background: var(--paper);
-      color: var(--ink);
-    }
+  .skeleton {
+    background: linear-gradient(90deg, var(--paper-2) 25%, var(--divider) 50%, var(--paper-2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    border-radius: var(--radius);
+    height: 1em;
+    margin-bottom: 0.5rem;
+  }
+  @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .form-group { margin-bottom: 16px; }
-
-    label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      font-size: 0.85rem;
-      letter-spacing: 0.04em;
-    }
-
-    input[type="text"], textarea, select {
-      width: 100%;
-      background: var(--paper);
-      color: var(--ink);
-      border: 1px solid #000;
-      border-radius: 0;
-      padding: 12px;
-      font-size: 0.95rem;
-      font-family: inherit;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .helper {
-      display: block;
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.4;
-    }
-
-    .message {
-      display: none;
-      margin-bottom: 16px;
-      padding: 12px;
-      border: 1px solid var(--paper);
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-
-    .message.show { display: block; }
-    .message.success { background: #0b1a10; color: var(--green); border-color: var(--green); }
-    .message.error { background: #1a0c0c; color: var(--danger); border-color: var(--danger); }
-    .message.info { background: #0d1117; color: var(--focus); border-color: var(--focus); }
-
-    .slider-container {
-      background: var(--paper);
-      color: var(--ink);
-      border: 1px solid #000;
-      margin-bottom: 14px;
-      padding: 14px;
-    }
-
-    .slider-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      gap: 10px;
-    }
-
-    .slider-index {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #444;
-      font-weight: 700;
-    }
-
-    .slider-value {
-      background: #000;
-      color: #fff;
-      padding: 4px 8px;
-      font-size: 0.78rem;
-      min-width: 40px;
-      text-align: center;
-      font-weight: 700;
-    }
-
-    .slider-poles {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 8px;
-      font-weight: 700;
-      font-size: 0.92rem;
-    }
-
-    .slider-description {
-      margin-bottom: 10px;
-      color: #444;
-      font-size: 0.84rem;
-      line-height: 1.45;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      appearance: none;
-      background: #dcdcdc;
-      height: 8px;
-      border-radius: 0;
-      outline: none;
-      border: 1px solid #000;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      background: #000;
-      border: 1px solid #fff;
-      cursor: pointer;
-    }
-
-    input[type="range"]::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      background: #000;
-      border: 1px solid #fff;
-      cursor: pointer;
-    }
-
-    button {
-      border-radius: 0;
-      font-family: inherit;
-      font-size: 0.92rem;
-      font-weight: 700;
-      padding: 12px 14px;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: var(--paper);
-      color: var(--ink);
-      border: 1px solid #000;
-    }
-
-    .btn-secondary {
-      background: #000;
-      color: var(--paper);
-      border: 1px solid var(--paper);
-    }
-
-    .button-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .button-group button { flex: 1; }
-
-    .poles-container {
-      border: 1px dashed var(--paper);
-      padding: 14px;
-      margin-bottom: 16px;
-      background: var(--panel-2);
-    }
-
-    .dimension-item {
-      border: 1px solid var(--paper);
-      padding: 12px;
-      margin-bottom: 10px;
-      background: #000;
-    }
-
-    .dimension-count {
-      display: inline-block;
-      border: 1px solid var(--paper);
-      padding: 2px 8px;
-      margin-left: 8px;
-      font-size: 0.8rem;
-    }
-
-    .list-scroll {
-      max-height: 340px;
-      overflow-y: auto;
-    }
-
-    .axis-selector {
-      border: 1px solid var(--paper);
-      padding: 12px;
-      margin-bottom: 14px;
-      background: #000;
-    }
-
-    .axis-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .axis-row:last-child { margin-bottom: 0; }
-
-    .axis-label {
-      min-width: 84px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-    }
-
-    .axis-row select { flex: 1; }
-
-    .scatter-container {
-      width: 100%;
-      height: 520px;
-      background: #000;
-      border: 2px solid var(--paper);
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .scatter-container.fullscreen {
-      position: fixed;
-      inset: 0;
-      width: 100vw !important;
-      height: 100vh !important;
-      z-index: 9999;
-      margin: 0;
-    }
-
-    svg {
-      width: 100%;
-      height: 100%;
-      flex: 1;
-      display: block;
-    }
-
-    .fullscreen-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 38px;
-      height: 38px;
-      background: #000;
-      color: #fff;
-      border: 1px solid #fff;
-      z-index: 10;
-    }
-
-    .plot-legend {
-      position: absolute;
-      right: 12px;
-      bottom: 12px;
-      display: inline-flex;
-      gap: 12px;
-      align-items: center;
-      background: #000;
-      border: 1px solid #fff;
-      color: #fff;
-      padding: 8px 12px;
-      font-size: 0.8rem;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border: 1px solid #fff;
-    }
-
-    .legend-dot.current { background: #9ae6ff; }
-    .legend-dot.others { background: #ff7ad9; }
-    .legend-dot.focused { background: #ffe066; }
-
-    .analysis-list {
-      border: 1px solid var(--paper);
-      padding: 12px;
-      background: #000;
-    }
-
-    .analysis-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      border: 1px solid var(--paper);
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      background: #111;
-    }
-
-    .analysis-score {
-      min-width: 52px;
-      text-align: center;
-      padding: 4px 10px;
-      font-weight: 700;
-      color: #000;
-      background: #fff;
-    }
-
-    .focus-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--paper);
-      padding: 8px 10px;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      background: #000;
-      color: #fff;
-      font-size: 0.86rem;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 28px 18px;
-      color: var(--muted);
-      border: 1px dashed var(--paper);
-      background: #000;
-      line-height: 1.5;
-    }
-
-    .matrix-note {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.5;
-    }
-
-    .prose {
-      line-height: 1.6;
-      color: var(--paper);
-      font-size: 0.96rem;
-    }
-
-    .prose h3 {
-      margin-top: 16px;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      font-size: 0.95rem;
-      letter-spacing: 0.04em;
-    }
-
-    .mode-pill {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 6px 10px;
-      border: 1px solid var(--paper);
-      background: #000;
-      color: var(--paper);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    @media (max-width: 768px) {
-      body { padding: 12px; }
-      .panel { padding: 14px; }
-      .button-group { flex-direction: column; }
-      .axis-row { flex-wrap: wrap; }
-      .axis-label { width: 100%; min-width: unset; }
-      input[type="range"]::-webkit-slider-thumb { width: 28px; height: 28px; }
-      input[type="range"]::-moz-range-thumb { width: 28px; height: 28px; }
-    }
-  </style>
+  @media (max-width: 600px) {
+    header { padding: 1rem; }
+    main { padding: 1.2rem 1rem 3rem; }
+    .dim-manage-row { grid-template-columns: 1fr 1fr; }
+    .dim-manage-row input:nth-child(3) { grid-column: 1 / -1; }
+    .dim-manage-row button { grid-column: 1 / -1; }
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Archive Epiaesthetic Matrix</h1>
-      <p>
-        This tool treats archives as media systems: arrangements of storage, transmission,
-        access, and linkage that produce meaning. Score an archive across user-defined bipolar
-        continuums, then position it in a comparative epiaesthetic field.
-      </p>
-    </header>
 
-    <div class="main-grid">
-      <div class="panel">
-        <div class="tab-nav">
-          <button class="tab-btn active" data-tab="assessment">Archive Entry</button>
-          <button class="tab-btn" data-tab="dimensions">Continuums</button>
-          <button class="tab-btn" data-tab="instructions">Method</button>
-          <button class="tab-btn" data-tab="overallMatrix">Distance Matrix</button>
-        </div>
+<header>
+  <div>
+    <div class="logo">Drag <span>Cass-essment</span></div>
+    <div class="tagline">Matrix authoring &amp; performance archive</div>
+  </div>
+  <nav>
+    <button class="active" onclick="showPanel('assess')" data-panel="assess">Assess</button>
+    <button onclick="showPanel('archive')" data-panel="archive">Archive</button>
+    <button onclick="showPanel('dimensions')" data-panel="dimensions">Dimensions</button>
+  </nav>
+</header>
 
-        <div id="assessment" class="tab-content active">
-          <div id="message" class="message"></div>
+<main>
 
-          <div class="form-group">
-            <label for="existingArchiveSelect">Load Existing Archive</label>
-            <select id="existingArchiveSelect">
-              <option value="">Create new archive...</option>
-            </select>
-            <small class="helper">Select an existing archive to edit it by ID.</small>
-            <div id="editModePill" class="mode-pill" style="display:none;">Editing existing archive</div>
-          </div>
+  <div class="panel active" id="panel-assess">
+    <h2 class="section-head">New assessment</h2>
+    <p class="section-sub">or edit an existing one</p>
 
-          <div class="form-group">
-            <label for="archiveName">Archive Name</label>
-            <input type="text" id="archiveName" placeholder="Enter archive title, collection, platform, repository, or media object">
-          </div>
+    <label for="load-select">Load existing performance to edit</label>
+    <select id="load-select" onchange="loadExisting(this.value)">
+      <option value="">— start new —</option>
+    </select>
 
-          <div class="form-group">
-            <label for="archiveNotes">Archive Notes / Source</label>
-            <textarea id="archiveNotes" placeholder="Optional notes, source context, collection scope, provenance, or interpretive reminders"></textarea>
-            <small class="helper">Use this field for context, citations, provenance, or shorthand observations.</small>
-          </div>
+    <label for="perf-name">Performance / performer name</label>
+    <input type="text" id="perf-name" placeholder="e.g. Viva Las Dragus — Club Nautico Spring 2026">
 
-          <div class="form-group">
-            <label for="evaluator">Evaluator</label>
-            <input type="text" id="evaluator" placeholder="Optional evaluator name or initials">
-            <small class="helper">Useful when multiple people are contributing readings of the same archive.</small>
-          </div>
+    <label for="evaluator">Evaluator</label>
+    <input type="text" id="evaluator" placeholder="Your name or handle">
 
-          <div id="assessmentForm"></div>
+    <label for="perf-notes">Notes</label>
+    <textarea id="perf-notes" placeholder="Context, impressions, observations…"></textarea>
 
-          <div class="button-group">
-            <button class="btn-primary" id="submitBtn">Save Archive Position</button>
-            <button class="btn-secondary" id="resetBtn">Reset Form</button>
-          </div>
-        </div>
-
-        <div id="dimensions" class="tab-content">
-          <div class="poles-container">
-            <h2 style="border:none; padding-bottom:0; margin-bottom:14px;">Add New Continuum</h2>
-
-            <div class="form-group">
-              <label for="poleA">Pole A</label>
-              <input type="text" id="poleA" placeholder="e.g., Time bias">
-            </div>
-
-            <div class="form-group">
-              <label for="poleB">Pole B</label>
-              <input type="text" id="poleB" placeholder="e.g., Space bias">
-            </div>
-
-            <div class="form-group">
-              <label for="dimensionDescription">Description</label>
-              <textarea id="dimensionDescription" placeholder="Optional note on what this continuum measures"></textarea>
-            </div>
-
-            <button class="btn-primary" id="addPoleBtn" style="width:100%;">Add Continuum</button>
-          </div>
-
-          <h2 style="border:none; padding-bottom:0; margin-bottom:12px;">
-            Active Continuums <span class="dimension-count" id="dimCount">0</span>
-          </h2>
-          <div id="dimensionsList" class="list-scroll"></div>
-        </div>
-
-        <div id="instructions" class="tab-content prose">
-          <div class="message info show" style="display:block;">
-            This version treats each saved row as an evaluated archive rather than a self-description by a collaborator.
-            The goal is comparative placement, not matchmaking.
-          </div>
-
-          <h3>What the sliders mean</h3>
-          <p>
-            Each slider represents one epiaesthetic continuum. A score of -10 places the archive strongly
-            toward Pole A, 0 marks an ambivalent or mixed reading, and +10 places it toward Pole B.
-          </p>
-
-          <h3>How to use the tool</h3>
-          <p>
-            Enter an archive, collection, platform, repository, or media object, then score it across all
-            active continuums. Once saved, the archive appears in the field and becomes available for
-            comparative distance analysis.
-          </p>
-
-          <h3>Editing mode</h3>
-          <p>
-            Use the “Load Existing Archive” dropdown to select a saved archive. The form will load its saved
-            values and updates will be written back to the same record by Archive ID.
-          </p>
-
-          <h3>Suggested continuums</h3>
-          <p>
-            Time bias / Space bias, Singular / Multiple, Closed / Open, Vertical / Horizontal,
-            Passive / Active, High causality / Low causality, and Hegemonic / Counter-hegemonic.
-          </p>
-        </div>
-
-        <div id="overallMatrix" class="tab-content">
-          <h2 style="border:none; padding-bottom:0; margin-bottom:12px;">Overall Distance Matrix</h2>
-          <div id="overallMatrixContainer"></div>
-          <small class="matrix-note">
-            Lighter cells indicate archives that are closer together across the full set of continuums.
-            Darker cells indicate greater distance.
-          </small>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2>Epiaesthetic Field</h2>
-
-        <div class="axis-selector">
-          <div class="axis-row">
-            <label class="axis-label" for="axisX">X Axis</label>
-            <select id="axisX">
-              <option value="">Loading continuums...</option>
-            </select>
-          </div>
-
-          <div class="axis-row">
-            <label class="axis-label" for="axisY">Y Axis</label>
-            <select id="axisY">
-              <option value="">Loading continuums...</option>
-            </select>
-          </div>
-
-          <div class="axis-row">
-            <label class="axis-label" for="axisXFlip">Flip X</label>
-            <input type="checkbox" id="axisXFlip" style="width:auto; cursor:pointer;">
-          </div>
-
-          <div class="axis-row">
-            <label class="axis-label" for="axisYFlip">Flip Y</label>
-            <input type="checkbox" id="axisYFlip" style="width:auto; cursor:pointer;">
-          </div>
-        </div>
-
-        <div class="scatter-container" id="scatterContainer">
-          <button class="fullscreen-btn" id="fullscreenBtn" title="Toggle fullscreen">⛶</button>
-          <svg id="scatterPlot"></svg>
-
-          <div class="plot-legend">
-            <div class="legend-item">
-              <div class="legend-dot current"></div>
-              <span>Latest saved</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot others"></div>
-              <span>Archives</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot focused"></div>
-              <span>Focused</span>
-            </div>
-          </div>
-        </div>
-
-        <div id="analysisResults" style="display:none;">
-          <h2 id="analysisHeader" style="border:none; padding-bottom:0; margin-bottom:0;">Archive Analysis</h2>
-
-          <div id="focusPill" class="focus-pill" style="display:none;">
-            <span id="focusLabel"></span>
-            <button class="btn-secondary" id="clearFocusBtn" type="button">Clear focus</button>
-          </div>
-
-          <div id="analysisList" class="analysis-list"></div>
-        </div>
-      </div>
+    <div id="dimensions-container">
+      <div class="skeleton" style="height:80px; margin-bottom:.75rem;"></div>
+      <div class="skeleton" style="height:80px; margin-bottom:.75rem;"></div>
+      <div class="skeleton" style="height:80px;"></div>
     </div>
+
+    <button class="btn btn-primary" onclick="submitForm()">Save assessment</button>
+    <button class="btn btn-ghost" onclick="resetForm()" style="margin-left:.5rem;">Clear</button>
+    <div id="status"></div>
   </div>
 
-  <script>
-    let allDimensions = [];
-    let allResponses = [];
-    let currentScores = [];
-    let currentArchiveName = '';
-    let currentArchiveId = '';
-    let focusedArchive = '';
-    const scriptUrl = '<?= scriptUrl ?>';
+  <div class="panel" id="panel-archive">
+    <h2 class="section-head">Archive</h2>
+    <p class="section-sub">all saved assessments</p>
+    <div id="archive-list"><div class="skeleton" style="height:64px;"></div></div>
+  </div>
 
-    window.addEventListener('DOMContentLoaded', initializeApp);
+  <div class="panel" id="panel-dimensions">
+    <h2 class="section-head">Manage dimensions</h2>
+    <p class="section-sub">author the rubric — edit poles in the linked Google Sheet or add here</p>
 
-    function initializeApp() {
-      showMessage('Loading continuums and archive positions...', 'info');
+    <div class="dim-manage-row">
+      <div>
+        <label style="margin-top:0;" for="new-pole-a">Pole A</label>
+        <input type="text" id="new-pole-a" placeholder="e.g. Control">
+      </div>
+      <div>
+        <label style="margin-top:0;" for="new-pole-b">Pole B</label>
+        <input type="text" id="new-pole-b" placeholder="e.g. Letting go">
+      </div>
+      <div>
+        <label style="margin-top:0;" for="new-desc">Description (optional)</label>
+        <input type="text" id="new-desc" placeholder="What does this continuum measure?">
+      </div>
+      <div>
+        <label style="margin-top:0;">&nbsp;</label>
+        <button class="btn btn-lilac" style="margin-top:0;padding:.55rem 1rem;" onclick="addDimension()">Add</button>
+      </div>
+    </div>
 
-      google.script.run
-        .withSuccessHandler(function(result) {
-          if (result && result.success) {
-            allDimensions = result.pairs || [];
-            renderAssessmentForm();
-            renderDimensionsList();
-            loadAxisOptions();
-            loadArchiveDropdown();
-            setupEventListeners();
-            loadResponses();
-            showMessage('Ready. Existing archive positions are now visible in the field.', 'success');
-          } else {
-            showMessage('Error loading continuums: ' + (result.error || 'unknown'), 'error');
-          }
-        })
-        .withFailureHandler(function(error) {
-          showMessage('Connection error: ' + error, 'error');
-        })
-        .getDimensionPairs();
-    }
+    <div class="existing-dims" id="existing-dims">
+      <div class="skeleton" style="height:1em; margin-bottom:.5rem;"></div>
+      <div class="skeleton" style="height:1em; margin-bottom:.5rem;"></div>
+      <div class="skeleton" style="height:1em;"></div>
+    </div>
 
-    let listenersBound = false;
+    <div id="dim-status"></div>
+  </div>
 
-    function setupEventListeners() {
-      if (listenersBound) return;
-      listenersBound = true;
+</main>
 
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          switchTab(e, this.getAttribute('data-tab'));
-        });
+<script>
+var dimensionPairs = [];
+var currentArchiveId = null;
+
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('nav button').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelector('[data-panel="' + name + '"]').classList.add('active');
+  if (name === 'archive') loadArchiveList();
+  if (name === 'dimensions') loadDimensionsList();
+}
+
+function loadDimensions() {
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res.success) { console.error(res.error); return; }
+      dimensionPairs = res.pairs;
+      renderSliders();
+      renderLoadSelect();
+    })
+    .withFailureHandler(function(e){ console.error(e); })
+    .getDimensionPairs();
+}
+
+function renderSliders() {
+  var c = document.getElementById('dimensions-container');
+  if (!dimensionPairs.length) {
+    c.innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">No dimensions yet — add some in the Dimensions tab.</p>';
+    return;
+  }
+  c.innerHTML = dimensionPairs.map(function(d) {
+    return '<div class="dim-row">' +
+      '<div class="dim-poles">' +
+        '<span class="pole-a">' + esc(d.poleA) + '</span>' +
+        '<span class="pole-b">' + esc(d.poleB) + '</span>' +
+      '</div>' +
+      (d.description ? '<div class="dim-desc">' + esc(d.description) + '</div>' : '') +
+      '<input type="range" class="dim-slider" min="-5" max="5" value="0" data-dim="' + d.index + '" oninput="updateVal(this)">' +
+      '<div class="dim-val" id="val-' + d.index + '">0</div>' +
+    '</div>';
+  }).join('');
+}
+
+function updateVal(el) {
+  document.getElementById('val-' + el.dataset.dim).textContent = el.value;
+}
+
+function renderLoadSelect() {
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res.success) return;
+      var sel = document.getElementById('load-select');
+      sel.innerHTML = '<option value="">— start new —</option>' +
+        res.archives.map(function(a) {
+          return '<option value="' + esc(a.archiveId) + '">' + esc(a.archive) + '</option>';
+        }).join('');
+    })
+    .getArchiveOptions();
+}
+
+function loadExisting(archiveId) {
+  if (!archiveId) { resetForm(); return; }
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res.success) { alert(res.error); return; }
+      var a = res.archive;
+      currentArchiveId = a.archiveId;
+      document.getElementById('perf-name').value = a.archiveName || '';
+      document.getElementById('evaluator').value = a.evaluator || '';
+      document.getElementById('perf-notes').value = a.archiveNotes || '';
+      document.querySelectorAll('.dim-slider').forEach(function(sl) {
+        var idx = parseInt(sl.dataset.dim, 10);
+        var v = a.responses && a.responses[idx] !== undefined ? a.responses[idx] : 0;
+        sl.value = v;
+        document.getElementById('val-' + idx).textContent = v;
       });
+    })
+    .getArchiveById(archiveId);
+}
 
-      document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+function submitForm() {
+  var name = document.getElementById('perf-name').value.trim();
+  if (!name) { showStatus('Performance name is required.', 'err'); return; }
+  var responses = dimensionPairs.map(function(d) {
+    var sl = document.querySelector('[data-dim="' + d.index + '"]');
+    return { dimensionIndex: d.index, value: sl ? parseInt(sl.value, 10) : 0 };
+  });
+  var data = {
+    archiveName: name,
+    archiveNotes: document.getElementById('perf-notes').value.trim(),
+    evaluator: document.getElementById('evaluator').value.trim(),
+    responses: responses
+  };
+  if (currentArchiveId) {
+    data.archiveId = currentArchiveId;
+    google.script.run.withSuccessHandler(onSave).withFailureHandler(onErr).updateArchiveAssessment(data);
+  } else {
+    google.script.run.withSuccessHandler(onSave).withFailureHandler(onErr).submitAssessment(data);
+  }
+}
 
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && document.getElementById('scatterContainer').classList.contains('fullscreen')) {
-          toggleFullscreen();
-        }
-      });
+function onSave(res) {
+  if (!res.success) { showStatus('Error: ' + res.error, 'err'); return; }
+  showStatus('Saved — ID: ' + res.archiveId, 'ok');
+  resetForm();
+  renderLoadSelect();
+}
+function onErr(e) { showStatus('Script error: ' + String(e), 'err'); }
 
-      document.getElementById('submitBtn').addEventListener('click', submitAssessment);
-      document.getElementById('resetBtn').addEventListener('click', function() { resetForm(true); });
-      document.getElementById('addPoleBtn').addEventListener('click', addNewDimensionPair);
+function resetForm() {
+  currentArchiveId = null;
+  document.getElementById('perf-name').value = '';
+  document.getElementById('evaluator').value = '';
+  document.getElementById('perf-notes').value = '';
+  document.getElementById('load-select').value = '';
+  document.querySelectorAll('.dim-slider').forEach(function(sl) {
+    sl.value = 0;
+    document.getElementById('val-' + sl.dataset.dim).textContent = '0';
+  });
+  var s = document.getElementById('status');
+  s.className = '';
+  s.style.display = 'none';
+}
 
-      document.getElementById('axisX').addEventListener('change', rerenderField);
-      document.getElementById('axisY').addEventListener('change', rerenderField);
-      document.getElementById('axisXFlip').addEventListener('change', rerenderField);
-      document.getElementById('axisYFlip').addEventListener('change', rerenderField);
+function showStatus(msg, cls) {
+  var el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = cls;
+}
 
-      document.getElementById('clearFocusBtn').addEventListener('click', function() {
-        focusedArchive = '';
-        updateFocusPill();
-        refreshAnalysis();
-        updateScatterPlot();
-      });
-
-      document.getElementById('existingArchiveSelect').addEventListener('change', function() {
-        const selectedId = this.value;
-        if (!selectedId) {
-          resetForm(true);
-          return;
-        }
-        loadArchiveForEditing(selectedId);
-      });
-    }
-
-    function rerenderField() {
-      updateScatterPlot();
-      refreshAnalysis();
-    }
-
-    function switchTab(e, tabName) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(tabName).classList.add('active');
-      if (e && e.target) e.target.classList.add('active');
-    }
-
-    function renderAssessmentForm() {
-      const container = document.getElementById('assessmentForm');
-      currentScores = new Array(allDimensions.length).fill(0);
-
-      if (!allDimensions.length) {
-        container.innerHTML = '<div class="empty-state"><strong>No continuums yet.</strong><p>Create at least one continuum in the Continuums tab before entering archive scores.</p></div>';
+function loadArchiveList() {
+  google.script.run
+    .withSuccessHandler(function(res) {
+      var list = document.getElementById('archive-list');
+      if (!res.success || !res.responses.length) {
+        list.innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">No assessments saved yet.</p>';
         return;
       }
+      list.innerHTML = res.responses.map(function(r) {
+        var date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-CA', {year:'numeric',month:'short',day:'numeric'}) : '';
+        return '<div class="arc-card" onclick="goEdit(\'' + esc(r.archiveId) + '\')">' +
+          '<div>' +
+            '<div class="arc-name">' + esc(r.archive) + '</div>' +
+            '<div class="arc-meta">' + (r.evaluator ? esc(r.evaluator) + ' · ' : '') + date + '</div>' +
+          '</div>' +
+          '<div class="arc-id">' + esc(r.archiveId) + '</div>' +
+        '</div>';
+      }).join('');
+    })
+    .getAllResponses();
+}
 
-      container.innerHTML = allDimensions.map((dim, index) => `
-        <div class="slider-container">
-          <div class="slider-label">
-            <span class="slider-index">Continuum ${index + 1}</span>
-            <span class="slider-value" id="value-${index}">0</span>
-          </div>
-          <div class="slider-poles">
-            <span>${escapeHtml(dim.poleA)}</span>
-            <span>${escapeHtml(dim.poleB)}</span>
-          </div>
-          ${dim.description ? `<div class="slider-description">${escapeHtml(dim.description)}</div>` : ''}
-          <input type="range" id="slider-${index}" min="-10" max="10" value="0" data-index="${index}">
-        </div>
-      `).join('');
+function goEdit(archiveId) {
+  showPanel('assess');
+  document.getElementById('load-select').value = archiveId;
+  loadExisting(archiveId);
+}
 
-      document.querySelectorAll('#assessmentForm input[type="range"]').forEach(slider => {
-        slider.addEventListener('input', function() {
-          const idx = parseInt(this.getAttribute('data-index'), 10);
-          const val = parseInt(this.value, 10);
-          currentScores[idx] = val;
-          document.getElementById(`value-${idx}`).textContent = val;
-        });
-      });
-    }
-
-    function renderDimensionsList() {
-      const container = document.getElementById('dimensionsList');
-      document.getElementById('dimCount').textContent = allDimensions.length;
-
-      if (!allDimensions.length) {
-        container.innerHTML = '<div class="empty-state"><strong>No continuums yet.</strong><p>Add interpretive poles to begin building the matrix vocabulary.</p></div>';
+function loadDimensionsList() {
+  var c = document.getElementById('existing-dims');
+  c.innerHTML = '<div class="skeleton" style="height:1em;margin-bottom:.5rem;"></div><div class="skeleton" style="height:1em;"></div>';
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res.success || !res.pairs.length) {
+        c.innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">No dimensions defined yet.</p>';
         return;
       }
-
-      container.innerHTML = allDimensions.map((dim, index) => `
-        <div class="dimension-item">
-          <strong>Continuum ${index + 1}</strong>
-          <div style="margin-top:8px; display:flex; justify-content:space-between; gap:8px; font-weight:700;">
-            <span>${escapeHtml(dim.poleA)}</span>
-            <span>↔</span>
-            <span>${escapeHtml(dim.poleB)}</span>
-          </div>
-          ${dim.description ? `<div class="helper" style="margin-top:6px;">${escapeHtml(dim.description)}</div>` : ''}
-        </div>
-      `).join('');
-    }
-
-    function loadAxisOptions() {
-      const selectX = document.getElementById('axisX');
-      const selectY = document.getElementById('axisY');
-
-      selectX.innerHTML = '<option value="">Select continuum...</option>';
-      selectY.innerHTML = '<option value="">Select continuum...</option>';
-
-      allDimensions.forEach((pair, index) => {
-        const label = `${pair.poleA} ↔ ${pair.poleB}`;
-
-        const optX = document.createElement('option');
-        optX.value = index;
-        optX.textContent = label;
-        selectX.appendChild(optX);
-
-        const optY = document.createElement('option');
-        optY.value = index;
-        optY.textContent = label;
-        selectY.appendChild(optY);
-      });
-
-      if (allDimensions.length > 0) selectX.value = '0';
-      if (allDimensions.length > 1) selectY.value = '1';
-    }
-
-    function loadArchiveDropdown(selectedId = '') {
-      google.script.run
-        .withSuccessHandler(function(result) {
-          const select = document.getElementById('existingArchiveSelect');
-          if (!select) return;
-
-          select.innerHTML = '<option value="">Create new archive...</option>';
-
-          if (result && result.success && Array.isArray(result.archives)) {
-            result.archives.forEach(item => {
-              const opt = document.createElement('option');
-              opt.value = item.archiveId;
-              opt.textContent = item.archive;
-              select.appendChild(opt);
-            });
-          }
-
-          if (selectedId) select.value = selectedId;
-        })
-        .withFailureHandler(function() {})
-        .getArchiveOptions();
-    }
-
-    function setEditMode(isEditing) {
-      document.getElementById('editModePill').style.display = isEditing ? 'inline-block' : 'none';
-      document.getElementById('submitBtn').textContent = isEditing ? 'Update Archive Position' : 'Save Archive Position';
-    }
-
-    function loadArchiveForEditing(archiveId) {
-      google.script.run
-        .withSuccessHandler(function(result) {
-          if (!result || !result.success || !result.archive) {
-            showMessage('Could not load archive for editing.', 'error');
-            return;
-          }
-
-          const archive = result.archive;
-          currentArchiveId = archive.archiveId || '';
-          currentArchiveName = archive.archiveName || '';
-
-          document.getElementById('archiveName').value = archive.archiveName || '';
-          document.getElementById('archiveNotes').value = archive.archiveNotes || '';
-          document.getElementById('evaluator').value = archive.evaluator || '';
-
-          const saved = Array.isArray(archive.responses) ? archive.responses : [];
-          currentScores = new Array(allDimensions.length).fill(0);
-
-          for (let i = 0; i < allDimensions.length; i++) {
-            const val = parseInt(saved[i], 10);
-            currentScores[i] = isNaN(val) ? 0 : val;
-
-            const slider = document.getElementById(`slider-${i}`);
-            const output = document.getElementById(`value-${i}`);
-            if (slider) slider.value = currentScores[i];
-            if (output) output.textContent = currentScores[i];
-          }
-
-          setEditMode(true);
-          showMessage(`Loaded archive for editing: ${archive.archiveName}`, 'info');
-        })
-        .withFailureHandler(function(error) {
-          showMessage('Connection error: ' + error, 'error');
-        })
-        .getArchiveById(archiveId);
-    }
-
-    function addNewDimensionPair() {
-      const poleA = document.getElementById('poleA').value.trim();
-      const poleB = document.getElementById('poleB').value.trim();
-      const description = document.getElementById('dimensionDescription').value.trim();
-
-      if (!poleA || !poleB) {
-        showMessage('Fill in both poles before adding a continuum.', 'error');
-        return;
-      }
-
-      if (poleA === poleB) {
-        showMessage('The two poles must be different.', 'error');
-        return;
-      }
-
-      const btn = document.getElementById('addPoleBtn');
-      btn.disabled = true;
-
-      google.script.run
-        .withSuccessHandler(function(result) {
-          btn.disabled = false;
-          if (result && result.success) {
-            showMessage(result.message || 'Continuum added.', 'success');
-            document.getElementById('poleA').value = '';
-            document.getElementById('poleB').value = '';
-            document.getElementById('dimensionDescription').value = '';
-            initializeApp();
-          } else {
-            showMessage('Error: ' + (result && result.error ? result.error : 'Unknown error'), 'error');
-          }
-        })
-        .withFailureHandler(function(err) {
-          btn.disabled = false;
-          showMessage('Connection error: ' + err, 'error');
-        })
-        .addDimensionPair(poleA, poleB, description);
-    }
-
-    function submitAssessment() {
-      const archiveName = document.getElementById('archiveName').value.trim();
-      const archiveNotes = document.getElementById('archiveNotes').value.trim();
-      const evaluator = document.getElementById('evaluator').value.trim();
-
-      if (!archiveName) {
-        showMessage('Please enter an archive name.', 'error');
-        return;
-      }
-
-      const responses = allDimensions.map((_, idx) => ({
-        dimensionIndex: idx,
-        value: currentScores[idx] || 0
-      }));
-
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-
-      const payload = { archiveName, archiveNotes, evaluator, responses };
-
-      if (currentArchiveId) {
-        payload.archiveId = currentArchiveId;
-
-        google.script.run
-          .withSuccessHandler(function(result) {
-            btn.disabled = false;
-            if (result && result.success) {
-              showMessage('Archive updated.', 'success');
-              currentArchiveName = archiveName;
-              loadArchiveDropdown(currentArchiveId);
-              loadResponses();
-            } else {
-              showMessage('Error: ' + (result.error || 'Unknown error'), 'error');
-            }
-          })
-          .withFailureHandler(function(err) {
-            btn.disabled = false;
-            showMessage('Connection error: ' + err, 'error');
-          })
-          .updateArchiveAssessment(payload);
-      } else {
-        google.script.run
-          .withSuccessHandler(function(result) {
-            btn.disabled = false;
-            if (result && result.success) {
-              showMessage('Archive position saved.', 'success');
-              currentArchiveId = result.archiveId || '';
-              currentArchiveName = archiveName;
-              loadArchiveDropdown(currentArchiveId);
-              loadResponses();
-              setEditMode(true);
-            } else {
-              showMessage('Error: ' + (result.error || 'Unknown error'), 'error');
-            }
-          })
-          .withFailureHandler(function(err) {
-            btn.disabled = false;
-            showMessage('Connection error: ' + err, 'error');
-          })
-          .submitAssessment(payload);
-      }
-    }
-
-    function loadResponses() {
-      google.script.run
-        .withSuccessHandler(function(result) {
-          if (result && result.success === true && Array.isArray(result.responses)) {
-            allResponses = result.responses;
-          } else {
-            allResponses = [];
-          }
-          updateScatterPlot();
-          refreshAnalysis();
-          renderOverallMatrix();
-        })
-        .withFailureHandler(function(error) {
-          allResponses = [];
-          showMessage('Connection error: ' + error, 'error');
-          updateScatterPlot();
-          refreshAnalysis();
-          renderOverallMatrix();
-        })
-        .getAllResponses();
-    }
-
-    function euclideanDistance(vecA, vecB) {
-      const n = Math.min(vecA.length, vecB.length);
-      let sumSq = 0;
-      for (let i = 0; i < n; i++) {
-        const da = parseFloat(vecA[i]) || 0;
-        const db = parseFloat(vecB[i]) || 0;
-        const d = da - db;
-        sumSq += d * d;
-      }
-      return Math.sqrt(sumSq);
-    }
-
-    function getFocusArchive() {
-      return focusedArchive || currentArchiveName || '';
-    }
-
-    function computeAxisRelations(focus, xIdx, yIdx) {
-      const focusRow = allResponses.find(r => r.archive === focus);
-      if (!focusRow) return { near: [], far: [] };
-
-      const fx = parseFloat(focusRow.data[xIdx]) || 0;
-      const fy = parseFloat(focusRow.data[yIdx]) || 0;
-
-      const others = allResponses
-        .filter(r => r.archive !== focus)
-        .map(r => {
-          const ox = parseFloat(r.data[xIdx]) || 0;
-          const oy = parseFloat(r.data[yIdx]) || 0;
-          const dx = fx - ox;
-          const dy = fy - oy;
-          return { archive: r.archive, distance: Math.sqrt(dx * dx + dy * dy) };
-        });
-
-      return {
-        near: [...others].sort((a, b) => a.distance - b.distance).slice(0, 5),
-        far: [...others].sort((a, b) => b.distance - a.distance).slice(0, 5)
-      };
-    }
-
-    function computeOverallRelations(focus) {
-      const focusRow = allResponses.find(r => r.archive === focus);
-      if (!focusRow) return { near: [], far: [] };
-
-      const others = allResponses
-        .filter(r => r.archive !== focus)
-        .map(r => ({
-          archive: r.archive,
-          distance: euclideanDistance(focusRow.data, r.data)
-        }));
-
-      return {
-        near: [...others].sort((a, b) => a.distance - b.distance).slice(0, 5),
-        far: [...others].sort((a, b) => b.distance - a.distance).slice(0, 5)
-      };
-    }
-
-    function refreshAnalysis() {
-      const focus = getFocusArchive();
-      const xIdx = parseInt(document.getElementById('axisX').value, 10);
-      const yIdx = parseInt(document.getElementById('axisY').value, 10);
-
-      if (!focus || !Array.isArray(allResponses) || allResponses.length < 2 || !allResponses.some(r => r.archive === focus)) {
-        document.getElementById('analysisResults').style.display = 'none';
-        return;
-      }
-
-      const axisValid = !isNaN(xIdx) && !isNaN(yIdx) && xIdx !== yIdx;
-      const axisRelations = axisValid ? computeAxisRelations(focus, xIdx, yIdx) : { near: [], far: [] };
-      const overallRelations = computeOverallRelations(focus);
-
-      renderAnalysis({ focus, axisValid, axisRelations, overallRelations });
-    }
-
-    function updateFocusPill() {
-      const pill = document.getElementById('focusPill');
-      const label = document.getElementById('focusLabel');
-      const header = document.getElementById('analysisHeader');
-      const focus = getFocusArchive();
-
-      if (focusedArchive) {
-        pill.style.display = 'inline-flex';
-        label.textContent = `Focused archive: ${focusedArchive}`;
-      } else {
-        pill.style.display = 'none';
-        label.textContent = '';
-      }
-
-      header.textContent = `Archive Analysis${focus ? ' — ' + focus : ''}`;
-    }
-
-    function renderAnalysis(payload) {
-      const resultsDiv = document.getElementById('analysisResults');
-      const list = document.getElementById('analysisList');
-      updateFocusPill();
-
-      const renderBlock = (title, items, color) => {
-        if (!items.length) return `<p style="margin:8px 0; color:#bdbdbd;">${title}: none available yet.</p>`;
-        return `
-          <h3 style="margin:12px 0 8px; text-transform:uppercase; font-size:0.9rem; letter-spacing:0.04em;">${title}</h3>
-          ${items.map((item, idx) => `
-            <div class="analysis-card" style="border-left:4px solid ${color};">
-              <div>
-                <strong>${idx + 1}. ${escapeHtml(item.archive)}</strong><br>
-                <small style="color:#bdbdbd;">Distance: ${Number(item.distance).toFixed(2)}</small>
-              </div>
-              <span class="analysis-score" style="background:${color};">${Number(item.distance).toFixed(2)}</span>
-            </div>
-          `).join('')}
-        `;
-      };
-
-      let html = '';
-      if (payload.axisValid) {
-        html += renderBlock('Nearest on selected axes', payload.axisRelations.near, '#8ef0b5');
-        html += renderBlock('Farthest on selected axes', payload.axisRelations.far, '#ff8c8c');
-      } else {
-        html += '<p style="margin:8px 0; color:#bdbdbd;">Select two different continuums to compare archives in 2D.</p>';
-      }
-
-      html += renderBlock('Nearest across all continuums', payload.overallRelations.near, '#9ae6ff');
-      html += renderBlock('Farthest across all continuums', payload.overallRelations.far, '#ffe066');
-
-      list.innerHTML = html;
-      resultsDiv.style.display = 'block';
-    }
-
-    function updateScatterPlot() {
-      const xVal = document.getElementById('axisX').value;
-      const yVal = document.getElementById('axisY').value;
-      if (!xVal || !yVal) return;
-
-      const xIndex = parseInt(xVal, 10);
-      const yIndex = parseInt(yVal, 10);
-      if (isNaN(xIndex) || isNaN(yIndex) || xIndex === yIndex) return;
-
-      const svg = document.getElementById('scatterPlot');
-      const container = document.getElementById('scatterContainer');
-      if (!svg || !container) return;
-
-      while (svg.firstChild) svg.removeChild(svg.firstChild);
-
-      const width = container.clientWidth || 800;
-      const height = container.clientHeight || 500;
-      svg.setAttribute('width', width);
-      svg.setAttribute('height', height);
-      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-
-      const margin = 56;
-      const plotW = width - margin * 2;
-      const plotH = height - margin * 2;
-      if (plotW <= 0 || plotH <= 0) return;
-
-      const xFlipped = document.getElementById('axisXFlip').checked;
-      const yFlipped = document.getElementById('axisYFlip').checked;
-      const applyFlip = (value, flipped) => flipped ? -value : value;
-
-      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      bg.setAttribute('width', width);
-      bg.setAttribute('height', height);
-      bg.setAttribute('fill', '#000');
-      svg.appendChild(bg);
-
-      for (let i = -10; i <= 10; i += 5) {
-        const x = margin + (i + 10) / 20 * plotW;
-        const y = margin + plotH - (i + 10) / 20 * plotH;
-
-        const vLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        vLine.setAttribute('x1', x);
-        vLine.setAttribute('y1', margin);
-        vLine.setAttribute('x2', x);
-        vLine.setAttribute('y2', margin + plotH);
-        vLine.setAttribute('stroke', 'rgba(255,255,255,0.18)');
-        vLine.setAttribute('stroke-width', '1');
-        vLine.setAttribute('stroke-dasharray', '4,6');
-        svg.appendChild(vLine);
-
-        const hLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        hLine.setAttribute('x1', margin);
-        hLine.setAttribute('y1', y);
-        hLine.setAttribute('x2', margin + plotW);
-        hLine.setAttribute('y2', y);
-        hLine.setAttribute('stroke', 'rgba(255,255,255,0.18)');
-        hLine.setAttribute('stroke-width', '1');
-        hLine.setAttribute('stroke-dasharray', '4,6');
-        svg.appendChild(hLine);
-      }
-
-      const cx = margin + plotW / 2;
-      const cy = margin + plotH / 2;
-
-      const hAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      hAxis.setAttribute('x1', margin);
-      hAxis.setAttribute('y1', cy);
-      hAxis.setAttribute('x2', margin + plotW);
-      hAxis.setAttribute('y2', cy);
-      hAxis.setAttribute('stroke', '#ffffff');
-      hAxis.setAttribute('stroke-width', '2');
-      svg.appendChild(hAxis);
-
-      const vAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      vAxis.setAttribute('x1', cx);
-      vAxis.setAttribute('y1', margin);
-      vAxis.setAttribute('x2', cx);
-      vAxis.setAttribute('y2', margin + plotH);
-      vAxis.setAttribute('stroke', '#ffffff');
-      vAxis.setAttribute('stroke-width', '2');
-      svg.appendChild(vAxis);
-
-      const dimX = allDimensions[xIndex];
-      const dimY = allDimensions[yIndex];
-
-      addAxisLabel(
-        svg,
-        width / 2,
-        height - 16,
-        `${xFlipped ? dimX.poleB : dimX.poleA}  ←   X   →  ${xFlipped ? dimX.poleA : dimX.poleB}`,
-        'middle'
-      );
-
-      addAxisLabel(
-        svg,
-        18,
-        height / 2,
-        `${yFlipped ? dimY.poleB : dimY.poleA}  ←   Y   →  ${yFlipped ? dimY.poleA : dimY.poleB}`,
-        'start',
-        -90,
-        18,
-        height / 2
-      );
-
-      const focusName = getFocusArchive();
-      const currentItem = allResponses.find(r => r.archiveId === currentArchiveId) || null;
-
-      allResponses.forEach(item => {
-        if (!item || !Array.isArray(item.data)) return;
-        if (xIndex >= item.data.length || yIndex >= item.data.length) return;
-
-        let xv = parseFloat(item.data[xIndex]) || 0;
-        let yv = parseFloat(item.data[yIndex]) || 0;
-        xv = applyFlip(xv, xFlipped);
-        yv = applyFlip(yv, yFlipped);
-
-        const x = margin + (xv + 10) / 20 * plotW;
-        const y = margin + plotH - (yv + 10) / 20 * plotH;
-        if (x < margin || x > margin + plotW || y < margin || y > margin + plotH) return;
-
-        const isCurrent = currentItem && item.archiveId === currentItem.archiveId;
-        const isFocused = item.archive === focusName;
-
-        if (isFocused) {
-          const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          ring.setAttribute('cx', x);
-          ring.setAttribute('cy', y);
-          ring.setAttribute('r', isCurrent ? '14' : '12');
-          ring.setAttribute('fill', 'none');
-          ring.setAttribute('stroke', '#ffe066');
-          ring.setAttribute('stroke-width', '3');
-          svg.appendChild(ring);
-        }
-
-        if (isCurrent) {
-          const glow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          glow.setAttribute('cx', x);
-          glow.setAttribute('cy', y);
-          glow.setAttribute('r', '10');
-          glow.setAttribute('fill', '#9ae6ff');
-          glow.setAttribute('opacity', '0.28');
-          svg.appendChild(glow);
-        }
-
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', x);
-        circle.setAttribute('cy', y);
-        circle.setAttribute('r', isCurrent ? '7' : '6');
-        circle.setAttribute('fill', isCurrent ? '#9ae6ff' : '#ff7ad9');
-        circle.style.cursor = 'pointer';
-        svg.appendChild(circle);
-
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', x);
-        text.setAttribute('y', y - 14);
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('fill', '#ffffff');
-        text.setAttribute('font-size', isCurrent ? '10' : '9');
-        text.setAttribute('font-weight', isCurrent ? '700' : '500');
-        text.style.cursor = 'pointer';
-        text.textContent = truncate(item.archive, 16);
-        svg.appendChild(text);
-
-        attachFocusHandler(circle, item.archive);
-        attachFocusHandler(text, item.archive);
-      });
-    }
-
-    function addAxisLabel(svg, x, y, textValue, anchor, rotate, rx, ry) {
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', x);
-      text.setAttribute('y', y);
-      text.setAttribute('fill', '#ffffff');
-      text.setAttribute('font-size', '12');
-      text.setAttribute('font-weight', '700');
-      text.setAttribute('text-anchor', anchor || 'middle');
-      if (rotate) text.setAttribute('transform', `rotate(${rotate} ${rx} ${ry})`);
-      text.textContent = textValue;
-      svg.appendChild(text);
-    }
-
-    function attachFocusHandler(el, archiveName) {
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        focusedArchive = archiveName;
-        updateFocusPill();
-        refreshAnalysis();
-        updateScatterPlot();
-      });
-    }
-
-    function buildOverallDistanceMatrix() {
-      if (!Array.isArray(allResponses) || !allResponses.length) return null;
-
-      const n = allResponses.length;
-      const matrix = Array.from({ length: n }, () => new Array(n).fill(0));
-      let maxDist = 0;
-
-      for (let i = 0; i < n; i++) {
-        for (let j = i + 1; j < n; j++) {
-          const d = euclideanDistance(allResponses[i].data || [], allResponses[j].data || []);
-          matrix[i][j] = d;
-          matrix[j][i] = d;
-          if (d > maxDist) maxDist = d;
-        }
-      }
-
-      return {
-        matrix,
-        maxDist,
-        names: allResponses.map(r => r.archive || 'Untitled archive')
-      };
-    }
-
-    function renderOverallMatrix() {
-      const container = document.getElementById('overallMatrixContainer');
-      if (!container) return;
-      container.innerHTML = '';
-
-      const payload = buildOverallDistanceMatrix();
-      if (!payload) {
-        container.innerHTML = '<div class="empty-state"><strong>No matrix yet.</strong><p>Save at least one archive to begin building a comparative field.</p></div>';
-        return;
-      }
-
-      const { matrix, maxDist, names } = payload;
-      const n = names.length;
-      const cellSize = n <= 20 ? 24 : 14;
-      const labelSize = 92;
-      const width = labelSize + cellSize * n + 10;
-      const height = labelSize + cellSize * n + 10;
-      const svgNS = 'http://www.w3.org/2000/svg';
-      const svg = document.createElementNS(svgNS, 'svg');
-
-      svg.setAttribute('width', width);
-      svg.setAttribute('height', height);
-      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-      svg.style.display = 'block';
-      svg.style.maxWidth = '100%';
-
-      const bg = document.createElementNS(svgNS, 'rect');
-      bg.setAttribute('width', width);
-      bg.setAttribute('height', height);
-      bg.setAttribute('fill', '#000');
-      svg.appendChild(bg);
-
-      for (let k = 0; k < n; k++) {
-        const shortName = truncate(names[k], 12);
-
-        const tx = document.createElementNS(svgNS, 'text');
-        tx.setAttribute('x', labelSize + k * cellSize + cellSize / 2);
-        tx.setAttribute('y', labelSize - 6);
-        tx.setAttribute('fill', '#ffffff');
-        tx.setAttribute('font-size', n <= 20 ? '9' : '7');
-        tx.setAttribute('text-anchor', 'end');
-        tx.setAttribute('transform', `rotate(-60 ${labelSize + k * cellSize + cellSize / 2} ${labelSize - 6})`);
-        tx.textContent = shortName;
-        svg.appendChild(tx);
-
-        const ty = document.createElementNS(svgNS, 'text');
-        ty.setAttribute('x', labelSize - 4);
-        ty.setAttribute('y', labelSize + k * cellSize + cellSize / 2 + 3);
-        ty.setAttribute('fill', '#ffffff');
-        ty.setAttribute('font-size', n <= 20 ? '9' : '7');
-        ty.setAttribute('text-anchor', 'end');
-        ty.textContent = shortName;
-        svg.appendChild(ty);
-      }
-
-      for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-          const val = matrix[i][j];
-          const t = maxDist > 0 ? val / maxDist : 0;
-          const shade = Math.round(242 - t * 180);
-          const color = `rgb(${shade}, ${Math.max(shade - 10, 20)}, ${Math.max(shade - 22, 16)})`;
-
-          const rect = document.createElementNS(svgNS, 'rect');
-          rect.setAttribute('x', labelSize + j * cellSize);
-          rect.setAttribute('y', labelSize + i * cellSize);
-          rect.setAttribute('width', cellSize);
-          rect.setAttribute('height', cellSize);
-          rect.setAttribute('fill', color);
-          rect.setAttribute('stroke', 'rgba(15,23,42,0.55)');
-          rect.setAttribute('stroke-width', '0.5');
-
-          const title = document.createElementNS(svgNS, 'title');
-          title.textContent = `${names[i]} ↔ ${names[j]} — distance ${val.toFixed(2)}`;
-          rect.appendChild(title);
-          svg.appendChild(rect);
-        }
-      }
-
-      container.appendChild(svg);
-    }
-
-    function toggleFullscreen() {
-      const container = document.getElementById('scatterContainer');
-      const btn = document.getElementById('fullscreenBtn');
-
-      container.classList.toggle('fullscreen');
-      if (container.classList.contains('fullscreen')) {
-        btn.textContent = '✕';
-        btn.title = 'Exit fullscreen';
-        document.body.style.overflow = 'hidden';
-      } else {
-        btn.textContent = '⛶';
-        btn.title = 'Toggle fullscreen';
-        document.body.style.overflow = 'auto';
-      }
-
-      updateScatterPlot();
-    }
-
-    function showMessage(text, type) {
-      const msg = document.getElementById('message');
-      msg.textContent = text;
-      msg.className = `message show ${type}`;
-      clearTimeout(showMessage._timer);
-      showMessage._timer = setTimeout(() => msg.classList.remove('show'), 3200);
-    }
-
-    function resetForm(clearCurrent = true) {
-      document.getElementById('existingArchiveSelect').value = '';
-      document.getElementById('archiveName').value = '';
-      document.getElementById('archiveNotes').value = '';
-      document.getElementById('evaluator').value = '';
-
-      document.querySelectorAll('#assessmentForm input[type="range"]').forEach((slider, idx) => {
-        slider.value = 0;
-        const output = document.getElementById(`value-${idx}`);
-        if (output) output.textContent = '0';
-        currentScores[idx] = 0;
-      });
-
-      currentArchiveId = '';
-      if (clearCurrent) currentArchiveName = '';
-      setEditMode(false);
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text == null ? '' : String(text);
-      return div.innerHTML;
-    }
-
-    function truncate(text, max) {
-      const value = text == null ? '' : String(text);
-      return value.length > max ? value.slice(0, max - 1) + '…' : value;
-    }
-  </script>
+      c.innerHTML = '<p style="font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.75rem;">Current continua (' + res.pairs.length + ')</p>' +
+        res.pairs.map(function(d, i) {
+          return '<div class="existing-dim-item">' +
+            '<span style="color:var(--ink-faint);font-size:.7rem;">' + (i+1) + '</span>' +
+            '<span class="poles">' + esc(d.poleA) + ' ↔ ' + esc(d.poleB) + '</span>' +
+            (d.description ? '<span style="color:var(--ink-faint);font-size:.75rem;font-style:italic;">— ' + esc(d.description) + '</span>' : '') +
+          '</div>';
+        }).join('');
+    })
+    .getDimensionPairs();
+}
+
+function addDimension() {
+  var a = document.getElementById('new-pole-a').value.trim();
+  var b = document.getElementById('new-pole-b').value.trim();
+  var d = document.getElementById('new-desc').value.trim();
+  if (!a || !b) { dimStatus('Both poles are required.', 'err'); return; }
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res.success) { dimStatus(res.error, 'err'); return; }
+      dimStatus('Continuum added.', 'ok');
+      document.getElementById('new-pole-a').value = '';
+      document.getElementById('new-pole-b').value = '';
+      document.getElementById('new-desc').value = '';
+      loadDimensionsList();
+      loadDimensions();
+    })
+    .withFailureHandler(function(e){ dimStatus(String(e), 'err'); })
+    .addDimensionPair(a, b, d);
+}
+
+function dimStatus(msg, cls) {
+  var el = document.getElementById('dim-status');
+  el.textContent = msg;
+  el.style.cssText = 'display:block;padding:.5rem .8rem;border-radius:4px;font-size:.82rem;margin-top:1rem;background:' +
+    (cls === 'ok' ? '#e6f4ea;color:#2e6e40;border:1px solid #b6dfbc' : '#fdecea;color:#8b1a1a;border:1px solid #f5c2c0') + ';';
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.addEventListener('load', loadDimensions);
+</script>
 </body>
 </html>

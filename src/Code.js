@@ -4,7 +4,7 @@ const DIMENSIONS_SHEET = 'Dimensions';
 
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('Index')
-    .setTitle('Archive Epiaesthetic Matrix')
+    .setTitle('Drag Cass-essment')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
@@ -16,12 +16,27 @@ function initializeSheets() {
     if (!dimSheet) dimSheet = ss.insertSheet(DIMENSIONS_SHEET);
     if (dimSheet.getLastRow() === 0) {
       dimSheet.getRange(1, 1, 1, 3).setValues([['Pole A', 'Pole B', 'Description']]);
+      const defaults = [
+        ['Control', 'Letting go', 'How much does the performer hold vs. release?'],
+        ['Glamour', 'Failure', 'Polished perfection vs. embraced imperfection'],
+        ['Reading the room', 'Self-absorption', 'Audience awareness vs. internal focus'],
+        ['Transformation', 'Authenticity', 'How much persona vs. self is present?'],
+        ['Story arc', 'Pure sensation', 'Narrative structure vs. moment-to-moment feeling'],
+        ['Technical mastery', 'Raw instinct', 'Craft vs. impulse'],
+        ['Audience interaction', 'Fourth wall', 'Engagement vs. separation'],
+        ['Novelty', 'Tradition', 'Innovation vs. honouring the form'],
+        ['Dynamics/time', 'Flatness', 'Variation in pace, energy, rhythm vs. monotony'],
+        ['Cultural reference', 'Abstraction', 'Rooted in lineage vs. free-floating'],
+        ['Sex appeal', 'Wit', 'Body-led vs. mind-led pleasure'],
+        ['Humour', 'Sincerity', 'Comic register vs. earnest register'],
+      ];
+      dimSheet.getRange(2, 1, defaults.length, 3).setValues(defaults);
     }
 
     let respSheet = ss.getSheetByName(RESPONSES_SHEET);
     if (!respSheet) respSheet = ss.insertSheet(RESPONSES_SHEET);
     if (respSheet.getLastRow() === 0) {
-      respSheet.getRange(1, 1, 1, 5).setValues([['Archive ID', 'Timestamp', 'Archive Name', 'Archive Notes', 'Evaluator']]);
+      respSheet.getRange(1, 1, 1, 5).setValues([['Archive ID', 'Timestamp', 'Performance Name', 'Notes', 'Evaluator']]);
     }
 
     return { success: true };
@@ -98,7 +113,7 @@ function ensureResponseHeaders_() {
   const dimCount = getDimensionCount_();
 
   if (sheet.getLastRow() === 0) {
-    sheet.getRange(1, 1, 1, 5).setValues([['Archive ID', 'Timestamp', 'Archive Name', 'Archive Notes', 'Evaluator']]);
+    sheet.getRange(1, 1, 1, 5).setValues([['Archive ID', 'Timestamp', 'Performance Name', 'Notes', 'Evaluator']]);
   }
 
   const neededCols = 5 + dimCount;
@@ -112,7 +127,7 @@ function ensureResponseHeaders_() {
 }
 
 function generateArchiveId_() {
-  return 'arc_' + Utilities.getUuid().replace(/-/g, '').slice(0, 16);
+  return 'perf_' + Utilities.getUuid().replace(/-/g, '').slice(0, 16);
 }
 
 function normalizeScores_(responses, dimensionCount) {
@@ -143,7 +158,7 @@ function submitAssessment(data) {
     ensureResponseHeaders_();
 
     if (!data || !data.archiveName) {
-      return { success: false, error: 'Missing archive name' };
+      return { success: false, error: 'Missing performance name' };
     }
 
     const dimCount = getDimensionCount_();
@@ -220,7 +235,7 @@ function getArchiveById(archiveId) {
     return r.archiveId === String(archiveId || '').trim();
   });
 
-  if (!found) return { success: false, error: 'Archive not found' };
+  if (!found) return { success: false, error: 'Performance not found' };
 
   return {
     success: true,
@@ -242,7 +257,7 @@ function updateArchiveAssessment(data) {
     const archiveId = String((data && data.archiveId) || '').trim();
     const archiveName = String((data && data.archiveName) || '').trim();
     if (!archiveId || !archiveName) {
-      return { success: false, error: 'Missing archive ID or name' };
+      return { success: false, error: 'Missing performance ID or name' };
     }
 
     const dimCount = getDimensionCount_();
@@ -260,7 +275,7 @@ function updateArchiveAssessment(data) {
       }
     }
 
-    if (rowIndex === -1) return { success: false, error: 'Archive ID not found' };
+    if (rowIndex === -1) return { success: false, error: 'Performance ID not found' };
 
     const row = [
       archiveId,
@@ -275,4 +290,4 @@ function updateArchiveAssessment(data) {
   } catch (error) {
     return { success: false, error: String(error) };
   }
-}// test Sun 19 Jul 2026 15:33:09 ADT
+}
