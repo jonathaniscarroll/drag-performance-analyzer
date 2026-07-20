@@ -27,7 +27,7 @@ jobs:
       - name: Write clasp credentials
         run: |
           if [ -z "$CLASPRC_JSON" ]; then
-            echo "ERROR: CLASPRC_JSON secret is not set. Add it under Settings → Secrets → Actions."
+            echo "ERROR: CLASPRC_JSON secret is not set. Add it under Settings -> Secrets -> Actions."
             exit 1
           fi
           echo "$CLASPRC_JSON" > ~/.clasprc.json
@@ -39,8 +39,12 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Redeploy live web app
-        if: ${{ secrets.GAS_DEPLOYMENT_ID != '' }}
-        run: clasp deploy --deploymentId "$GAS_DEPLOYMENT_ID" --description "GitHub Actions deploy ${GITHUB_SHA}"
+        run: |
+          if [ -z "$GAS_DEPLOYMENT_ID" ]; then
+            echo "GAS_DEPLOYMENT_ID not set — skipping redeploy."
+            exit 0
+          fi
+          clasp deploy --deploymentId "$GAS_DEPLOYMENT_ID" --description "GitHub Actions deploy ${GITHUB_SHA}"
         working-directory: ${{ github.workspace }}
         env:
           GAS_DEPLOYMENT_ID: ${{ secrets.GAS_DEPLOYMENT_ID }}
