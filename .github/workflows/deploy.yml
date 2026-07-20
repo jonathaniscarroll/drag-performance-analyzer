@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -22,14 +25,22 @@ jobs:
         run: npm install -g @google/clasp
 
       - name: Write clasp credentials
-        run: echo "$CLASPRC_JSON" > ~/.clasprc.json
+        run: |
+          if [ -z "$CLASPRC_JSON" ]; then
+            echo "ERROR: CLASPRC_JSON secret is not set. Add it under Settings → Secrets → Actions."
+            exit 1
+          fi
+          echo "$CLASPRC_JSON" > ~/.clasprc.json
         env:
           CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
 
       - name: Push source to Apps Script
         run: clasp push --force
+        working-directory: ${{ github.workspace }}
 
       - name: Redeploy live web app
+        if: ${{ secrets.GAS_DEPLOYMENT_ID != '' }}
         run: clasp deploy --deploymentId "$GAS_DEPLOYMENT_ID" --description "GitHub Actions deploy ${GITHUB_SHA}"
+        working-directory: ${{ github.workspace }}
         env:
           GAS_DEPLOYMENT_ID: ${{ secrets.GAS_DEPLOYMENT_ID }}
