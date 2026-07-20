@@ -125,6 +125,41 @@
   }
   textarea { resize: vertical; min-height: 80px; }
 
+  /* Performer row — dropdown + add-new toggle */
+  .performer-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+  }
+  .performer-row select { flex: 1; }
+  .performer-row .btn-add-performer {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--lilac);
+    border-radius: var(--radius);
+    background: var(--lilac-lt);
+    color: var(--lilac);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 180ms ease;
+    margin-top: 0;
+    letter-spacing: 0.03em;
+  }
+  .performer-row .btn-add-performer:hover { background: var(--lilac); color: #fff; }
+
+  #new-performer-form {
+    display: none;
+    background: var(--lilac-lt);
+    border: 1px solid var(--lilac);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+  #new-performer-form label { color: var(--lilac); margin-top: 0.5rem; }
+  #new-performer-form label:first-child { margin-top: 0; }
+  .new-performer-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+
   #dimensions-container { margin: 1.5rem 0; }
   .dim-row {
     background: var(--paper-2);
@@ -194,6 +229,7 @@
   .btn-ghost:hover { border-color: var(--ink-muted); color: var(--ink); }
   .btn-lilac { background: var(--lilac-lt); color: var(--lilac); border-color: var(--lilac); }
   .btn-lilac:hover { background: var(--lilac); color: #fff; }
+  .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.75rem; margin-top: 0; }
 
   #status {
     margin-top: 1rem;
@@ -205,7 +241,48 @@
   #status.ok  { background: #e6f4ea; color: #2e6e40; border: 1px solid #b6dfbc; display: block; }
   #status.err { background: #fdecea; color: #8b1a1a; border: 1px solid #f5c2c0; display: block; }
 
-  #archive-list { margin-top: 1.5rem; display: grid; gap: 0.75rem; }
+  /* ── Archive ── */
+  .archive-filters {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-bottom: 1.25rem;
+    padding: 0.9rem 1rem;
+    background: var(--paper-2);
+    border: 1px solid var(--divider);
+    border-radius: var(--radius);
+  }
+  .archive-filters > div { flex: 1; min-width: 160px; }
+  .archive-filters label { margin-top: 0; }
+  .archive-filters select { font-size: 0.88rem; padding: 0.4rem 0.65rem; }
+  .filter-actions { display: flex; gap: 0.4rem; align-items: flex-end; padding-top: 1.2rem; flex-shrink: 0; }
+
+  .view-toggle {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+  .view-toggle button {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--divider);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: all 180ms ease;
+  }
+  .view-toggle button.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  #archive-list { display: grid; gap: 0.75rem; }
   .arc-card {
     background: var(--paper-2);
     border: 1px solid var(--divider);
@@ -222,6 +299,59 @@
   .arc-meta { font-size: 0.75rem; color: var(--ink-muted); margin-top: 0.15rem; }
   .arc-id { font-size: 0.65rem; color: var(--ink-faint); margin-left: auto; white-space: nowrap; padding-top: 0.2rem; }
 
+  /* ── Matrix view ── */
+  #matrix-view { display: none; }
+  .matrix-header {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--ink-muted);
+    margin-bottom: 1rem;
+  }
+  .matrix-plot {
+    background: var(--paper-2);
+    border: 1px solid var(--divider);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+  }
+  .matrix-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 160px;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    min-height: 28px;
+  }
+  .matrix-row:not(:last-child) {
+    border-bottom: 1px solid var(--divider);
+    padding-bottom: 0.6rem;
+  }
+  .pole-label-a {
+    font-size: 0.72rem;
+    color: var(--lilac);
+    font-weight: 500;
+    text-align: right;
+    letter-spacing: 0.02em;
+    padding-right: 0.5rem;
+  }
+  .pole-label-b {
+    font-size: 0.72rem;
+    color: var(--magenta);
+    font-weight: 500;
+    text-align: left;
+    letter-spacing: 0.02em;
+    padding-left: 0.5rem;
+  }
+  .matrix-track-wrap { position: relative; }
+  svg.matrix-track {
+    display: block;
+    width: 100%;
+    height: 28px;
+    overflow: visible;
+  }
+
+  /* Dimensions manager */
   .dim-manage-row {
     display: grid;
     grid-template-columns: 1fr 1fr 2fr auto;
@@ -257,6 +387,11 @@
     .dim-manage-row { grid-template-columns: 1fr 1fr; }
     .dim-manage-row input:nth-child(3) { grid-column: 1 / -1; }
     .dim-manage-row button { grid-column: 1 / -1; }
+    .matrix-row { grid-template-columns: 90px 1fr 90px; }
+    .pole-label-a, .pole-label-b { font-size: 0.65rem; }
+    .archive-filters { flex-direction: column; }
+    .performer-row { flex-direction: column; }
+    .performer-row .btn-add-performer { width: 100%; }
   }
 </style>
 </head>
@@ -276,6 +411,7 @@
 
 <main>
 
+  <!-- ══ ASSESS TAB ══════════════════════════════════════════════════════════ -->
   <div class="panel active" id="panel-assess">
     <h2 class="section-head">New assessment</h2>
     <p class="section-sub">or edit an existing one</p>
@@ -285,7 +421,28 @@
       <option value="">— start new —</option>
     </select>
 
-    <label for="perf-name">Performance / performer name</label>
+    <!-- Performer selection -->
+    <label>Performer</label>
+    <div class="performer-row">
+      <select id="performer-select" onchange="onPerformerSelect(this.value)">
+        <option value="">— select performer —</option>
+      </select>
+      <button class="btn-add-performer" onclick="toggleNewPerformerForm()" id="btn-toggle-performer">+ New</button>
+    </div>
+
+    <div id="new-performer-form">
+      <label for="np-name">Performer name</label>
+      <input type="text" id="np-name" placeholder="Stage name or legal name">
+      <label for="np-notes">Notes (optional)</label>
+      <input type="text" id="np-notes" placeholder="Pronouns, collective, notes…">
+      <div class="new-performer-actions">
+        <button class="btn btn-lilac btn-sm" onclick="saveNewPerformer()">Save performer</button>
+        <button class="btn btn-ghost btn-sm" onclick="cancelNewPerformer()">Cancel</button>
+      </div>
+      <div id="np-status" style="margin-top:.5rem;font-size:.8rem;"></div>
+    </div>
+
+    <label for="perf-name">Performance / show name</label>
     <input type="text" id="perf-name" placeholder="e.g. Viva Las Dragus — Club Nautico Spring 2026">
 
     <label for="evaluator">Evaluator</label>
@@ -305,12 +462,44 @@
     <div id="status"></div>
   </div>
 
+  <!-- ══ ARCHIVE TAB ════════════════════════════════════════════════════════ -->
   <div class="panel" id="panel-archive">
     <h2 class="section-head">Archive</h2>
-    <p class="section-sub">all saved assessments</p>
+    <p class="section-sub">browse, filter, visualise</p>
+
+    <div class="archive-filters">
+      <div>
+        <label for="filter-performer">Performer</label>
+        <select id="filter-performer">
+          <option value="">All performers</option>
+        </select>
+      </div>
+      <div>
+        <label for="filter-day">Day</label>
+        <select id="filter-day">
+          <option value="">All days</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-primary btn-sm" style="margin-top:0;" onclick="applyFilters()">Filter</button>
+        <button class="btn btn-ghost btn-sm" style="margin-top:0;" onclick="clearFilters()">Clear</button>
+      </div>
+    </div>
+
+    <div class="view-toggle">
+      <button class="active" id="btn-view-cards" onclick="setArchiveView('cards')">Cards</button>
+      <button id="btn-view-matrix" onclick="setArchiveView('matrix')">Matrix</button>
+    </div>
+
     <div id="archive-list"><div class="skeleton" style="height:64px;"></div></div>
+
+    <div id="matrix-view">
+      <div class="matrix-header" id="matrix-title"></div>
+      <div class="matrix-plot" id="matrix-plot"></div>
+    </div>
   </div>
 
+  <!-- ══ DIMENSIONS TAB ════════════════════════════════════════════════════ -->
   <div class="panel" id="panel-dimensions">
     <h2 class="section-head">Manage dimensions</h2>
     <p class="section-sub">author the rubric — edit poles in the linked Google Sheet or add here</p>
@@ -348,15 +537,25 @@
 <script>
 var dimensionPairs = [];
 var currentArchiveId = null;
+var performerList = [];
+var currentPerformerId = '';
+var currentPerformerName = '';
+var archiveViewMode = 'cards';
+var lastFilteredResponses = [];
+var lastMatrixData = null;
+
+// ── Panel navigation ──────────────────────────────────────────────────────────
 
 function showPanel(name) {
   document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('nav button').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('panel-' + name).classList.add('active');
   document.querySelector('[data-panel="' + name + '"]').classList.add('active');
-  if (name === 'archive') loadArchiveList();
+  if (name === 'archive') initArchivePanel();
   if (name === 'dimensions') loadDimensionsList();
 }
+
+// ── Dimensions ────────────────────────────────────────────────────────────────
 
 function loadDimensions() {
   google.script.run
@@ -413,9 +612,21 @@ function loadExisting(archiveId) {
       if (!res.success) { alert(res.error); return; }
       var a = res.archive;
       currentArchiveId = a.archiveId;
+      currentPerformerId = a.performerId || '';
+      currentPerformerName = a.performerName || '';
       document.getElementById('perf-name').value = a.archiveName || '';
       document.getElementById('evaluator').value = a.evaluator || '';
       document.getElementById('perf-notes').value = a.archiveNotes || '';
+      // Set performer dropdown
+      var pSel = document.getElementById('performer-select');
+      if (a.performerId && pSel.querySelector('[value="' + a.performerId + '"]')) {
+        pSel.value = a.performerId;
+      } else if (a.performerName) {
+        // Try matching by name as fallback
+        for (var i = 0; i < pSel.options.length; i++) {
+          if (pSel.options[i].text === a.performerName) { pSel.selectedIndex = i; break; }
+        }
+      }
       document.querySelectorAll('.dim-slider').forEach(function(sl) {
         var idx = parseInt(sl.dataset.dim, 10);
         var v = a.responses && a.responses[idx] !== undefined ? a.responses[idx] : 0;
@@ -426,6 +637,89 @@ function loadExisting(archiveId) {
     .getArchiveById(archiveId);
 }
 
+// ── Performers ────────────────────────────────────────────────────────────────
+
+function loadPerformerOptions(selectCallback) {
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res.success) return;
+      performerList = res.performers;
+      renderPerformerDropdowns();
+      if (selectCallback) selectCallback();
+    })
+    .withFailureHandler(function(e){ console.error(e); })
+    .getPerformerOptions();
+}
+
+function renderPerformerDropdowns() {
+  var opts = '<option value="">— select performer —</option>' +
+    performerList.map(function(p) {
+      return '<option value="' + esc(p.performerId) + '">' + esc(p.performerName) + '</option>';
+    }).join('');
+
+  document.getElementById('performer-select').innerHTML = opts;
+
+  // Archive filter dropdown
+  var fOpts = '<option value="">All performers</option>' +
+    performerList.map(function(p) {
+      return '<option value="' + esc(p.performerId) + '">' + esc(p.performerName) + '</option>';
+    }).join('');
+  document.getElementById('filter-performer').innerHTML = fOpts;
+}
+
+function onPerformerSelect(val) {
+  var p = performerList.find(function(x){ return x.performerId === val; });
+  currentPerformerId = val;
+  currentPerformerName = p ? p.performerName : '';
+}
+
+function toggleNewPerformerForm() {
+  var f = document.getElementById('new-performer-form');
+  f.style.display = f.style.display === 'block' ? 'none' : 'block';
+  if (f.style.display === 'block') document.getElementById('np-name').focus();
+}
+
+function cancelNewPerformer() {
+  document.getElementById('new-performer-form').style.display = 'none';
+  document.getElementById('np-name').value = '';
+  document.getElementById('np-notes').value = '';
+  document.getElementById('np-status').textContent = '';
+}
+
+function saveNewPerformer() {
+  var name = document.getElementById('np-name').value.trim();
+  var notes = document.getElementById('np-notes').value.trim();
+  if (!name) { npStatus('Name is required.', 'err'); return; }
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res.success && !res.performerId) { npStatus(res.error, 'err'); return; }
+      npStatus('Saved: ' + (res.performerName || name), 'ok');
+      document.getElementById('np-name').value = '';
+      document.getElementById('np-notes').value = '';
+      var savedId = res.performerId;
+      var savedName = res.performerName || name;
+      loadPerformerOptions(function() {
+        document.getElementById('performer-select').value = savedId;
+        currentPerformerId = savedId;
+        currentPerformerName = savedName;
+        setTimeout(function(){
+          document.getElementById('new-performer-form').style.display = 'none';
+          document.getElementById('np-status').textContent = '';
+        }, 1200);
+      });
+    })
+    .withFailureHandler(function(e){ npStatus(String(e), 'err'); })
+    .addPerformer(name, notes);
+}
+
+function npStatus(msg, cls) {
+  var el = document.getElementById('np-status');
+  el.textContent = msg;
+  el.style.color = cls === 'ok' ? '#2e6e40' : '#8b1a1a';
+}
+
+// ── Submit / reset ────────────────────────────────────────────────────────────
+
 function submitForm() {
   var name = document.getElementById('perf-name').value.trim();
   if (!name) { showStatus('Performance name is required.', 'err'); return; }
@@ -433,10 +727,19 @@ function submitForm() {
     var sl = document.querySelector('[data-dim="' + d.index + '"]');
     return { dimensionIndex: d.index, value: sl ? parseInt(sl.value, 10) : 0 };
   });
+  var perfSel = document.getElementById('performer-select');
+  var pId = currentPerformerId || perfSel.value;
+  var pName = currentPerformerName;
+  if (!pName && pId) {
+    var found = performerList.find(function(x){ return x.performerId === pId; });
+    pName = found ? found.performerName : '';
+  }
   var data = {
     archiveName: name,
     archiveNotes: document.getElementById('perf-notes').value.trim(),
     evaluator: document.getElementById('evaluator').value.trim(),
+    performerId: pId,
+    performerName: pName,
     responses: responses
   };
   if (currentArchiveId) {
@@ -457,10 +760,14 @@ function onErr(e) { showStatus('Script error: ' + String(e), 'err'); }
 
 function resetForm() {
   currentArchiveId = null;
+  currentPerformerId = '';
+  currentPerformerName = '';
   document.getElementById('perf-name').value = '';
   document.getElementById('evaluator').value = '';
   document.getElementById('perf-notes').value = '';
   document.getElementById('load-select').value = '';
+  document.getElementById('performer-select').value = '';
+  document.getElementById('new-performer-form').style.display = 'none';
   document.querySelectorAll('.dim-slider').forEach(function(sl) {
     sl.value = 0;
     document.getElementById('val-' + sl.dataset.dim).textContent = '0';
@@ -476,26 +783,186 @@ function showStatus(msg, cls) {
   el.className = cls;
 }
 
-function loadArchiveList() {
+// ── Archive panel ─────────────────────────────────────────────────────────────
+
+function initArchivePanel() {
+  loadFilterOptions();
+  applyFilters();
+}
+
+function loadFilterOptions() {
+  // Reload performers into filter dropdown
+  loadPerformerOptions();
+  // Load distinct days
   google.script.run
     .withSuccessHandler(function(res) {
+      var sel = document.getElementById('filter-day');
+      var cur = sel.value;
+      sel.innerHTML = '<option value="">All days</option>' +
+        (res.days || []).map(function(d) {
+          return '<option value="' + esc(d) + '">' + esc(d) + '</option>';
+        }).join('');
+      if (cur) sel.value = cur;
+    })
+    .getDistinctAssessmentDays();
+}
+
+function applyFilters() {
+  var performerId = document.getElementById('filter-performer').value;
+  var day = document.getElementById('filter-day').value;
+  var filters = {};
+  if (performerId) filters.performerId = performerId;
+  if (day) filters.day = day;
+
+  if (archiveViewMode === 'matrix') {
+    loadMatrixView(filters);
+  } else {
+    loadArchiveList(filters);
+  }
+}
+
+function clearFilters() {
+  document.getElementById('filter-performer').value = '';
+  document.getElementById('filter-day').value = '';
+  applyFilters();
+}
+
+function setArchiveView(mode) {
+  archiveViewMode = mode;
+  document.getElementById('btn-view-cards').classList.toggle('active', mode === 'cards');
+  document.getElementById('btn-view-matrix').classList.toggle('active', mode === 'matrix');
+  document.getElementById('archive-list').style.display = mode === 'cards' ? 'grid' : 'none';
+  document.getElementById('matrix-view').style.display = mode === 'matrix' ? 'block' : 'none';
+  applyFilters();
+}
+
+function loadArchiveList(filters) {
+  document.getElementById('archive-list').innerHTML = '<div class="skeleton" style="height:64px;"></div>';
+  var fn = (filters && (filters.performerId || filters.day)) ? 'getResponsesByFilters' : 'getAllResponses';
+  var runner = google.script.run
+    .withSuccessHandler(function(res) {
       var list = document.getElementById('archive-list');
-      if (!res.success || !res.responses.length) {
-        list.innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">No assessments saved yet.</p>';
+      if (!res.success || !res.responses || !res.responses.length) {
+        list.innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">No assessments match these filters.</p>';
         return;
       }
       list.innerHTML = res.responses.map(function(r) {
         var date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-CA', {year:'numeric',month:'short',day:'numeric'}) : '';
+        var performer = r.performerName ? '<span style="color:var(--lilac);">' + esc(r.performerName) + '</span> · ' : '';
         return '<div class="arc-card" onclick="goEdit(\'' + esc(r.archiveId) + '\')">' +
           '<div>' +
             '<div class="arc-name">' + esc(r.archive) + '</div>' +
-            '<div class="arc-meta">' + (r.evaluator ? esc(r.evaluator) + ' · ' : '') + date + '</div>' +
+            '<div class="arc-meta">' + performer + (r.evaluator ? esc(r.evaluator) + ' · ' : '') + date + '</div>' +
           '</div>' +
           '<div class="arc-id">' + esc(r.archiveId) + '</div>' +
         '</div>';
       }).join('');
     })
-    .getAllResponses();
+    .withFailureHandler(function(e){
+      document.getElementById('archive-list').innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">Error loading archive.</p>';
+    });
+  if (fn === 'getResponsesByFilters') {
+    runner.getResponsesByFilters(filters);
+  } else {
+    runner.getAllResponses();
+  }
+}
+
+function loadMatrixView(filters) {
+  document.getElementById('matrix-plot').innerHTML = '<div class="skeleton" style="height:200px;"></div>';
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res.success) {
+        document.getElementById('matrix-plot').innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">Error: ' + esc(res.error) + '</p>';
+        return;
+      }
+      lastMatrixData = res;
+      renderMatrixPlot(res, filters);
+    })
+    .withFailureHandler(function(e){
+      document.getElementById('matrix-plot').innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">Error loading matrix.</p>';
+    })
+    .buildMatrixData(filters || {});
+}
+
+function renderMatrixPlot(data, filters) {
+  var title = data.responseCount + ' assessment' + (data.responseCount !== 1 ? 's' : '');
+  var performerId = filters && filters.performerId;
+  var day = filters && filters.day;
+  if (performerId) {
+    var p = performerList.find(function(x){ return x.performerId === performerId; });
+    if (p) title += ' — ' + p.performerName;
+  }
+  if (day) title += ' — ' + day;
+  document.getElementById('matrix-title').textContent = title;
+
+  if (!data.matrix || !data.matrix.length) {
+    document.getElementById('matrix-plot').innerHTML = '<p style="color:var(--ink-muted);font-size:.85rem;">No data to display.</p>';
+    return;
+  }
+
+  // Build SVG matrix rows
+  var html = data.matrix.map(function(dim) {
+    var svgContent = buildTrackSVG(dim.scores, dim.avg);
+    return '<div class="matrix-row">' +
+      '<div class="pole-label-a">' + esc(dim.poleA) + '</div>' +
+      '<div class="matrix-track-wrap">' + svgContent + '</div>' +
+      '<div class="pole-label-b">' + esc(dim.poleB) + '</div>' +
+    '</div>';
+  }).join('');
+
+  // Legend
+  html += '<div style="display:flex;gap:1.2rem;margin-top:1rem;font-size:.72rem;color:var(--ink-muted);letter-spacing:.03em;">' +
+    '<span><svg width="12" height="12" style="display:inline;vertical-align:middle;"><circle cx="6" cy="6" r="4" fill="var(--lilac)" opacity=".7"/></svg> Individual scores</span>' +
+    '<span><svg width="16" height="12" style="display:inline;vertical-align:middle;"><line x1="0" y1="6" x2="16" y2="6" stroke="var(--magenta)" stroke-width="2" stroke-dasharray="4 2"/></svg> Average</span>' +
+  '</div>';
+
+  document.getElementById('matrix-plot').innerHTML = html;
+}
+
+function buildTrackSVG(scores, avg) {
+  // Map -5..5 → 0..100%
+  function pct(v) { return ((v + 5) / 10) * 100; }
+
+  var W = 400; var H = 28; var trackY = 14; var trackH = 3;
+
+  var svgParts = [];
+
+  // Track background
+  svgParts.push('<rect x="0" y="' + (trackY - trackH/2) + '" width="100%" height="' + trackH + '" rx="2" fill="var(--divider)"/>');
+
+  // Centre tick
+  svgParts.push('<line x1="50%" y1="' + (trackY-5) + '" x2="50%" y2="' + (trackY+5) + '" stroke="var(--ink-faint)" stroke-width="1"/>');
+
+  // Individual score dots
+  if (scores && scores.length) {
+    scores.forEach(function(v) {
+      var xPct = pct(v);
+      svgParts.push(
+        '<circle cx="' + xPct + '%" cy="' + trackY + '" r="5" fill="var(--lilac)" opacity="0.65" stroke="var(--paper)" stroke-width="1.5"/>'
+      );
+    });
+  }
+
+  // Average marker
+  if (avg !== null && avg !== undefined) {
+    var ax = pct(avg);
+    svgParts.push(
+      '<line x1="' + ax + '%" y1="4" x2="' + ax + '%" y2="24" stroke="var(--magenta)" stroke-width="2" stroke-dasharray="4 2"/>'
+    );
+    // avg label
+    var labelX = ax > 85 ? ax - 2 : ax;
+    var anchor = ax > 85 ? 'end' : (ax < 15 ? 'start' : 'middle');
+    svgParts.push(
+      '<text x="' + labelX + '%" y="10" font-size="8" fill="var(--magenta)" text-anchor="' + anchor + '" font-family="inherit">' +
+        (Math.round(avg * 10) / 10) +
+      '</text>'
+    );
+  }
+
+  return '<svg class="matrix-track" viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true">' +
+    svgParts.join('') +
+  '</svg>';
 }
 
 function goEdit(archiveId) {
@@ -503,6 +970,8 @@ function goEdit(archiveId) {
   document.getElementById('load-select').value = archiveId;
   loadExisting(archiveId);
 }
+
+// ── Dimensions manager ────────────────────────────────────────────────────────
 
 function loadDimensionsList() {
   var c = document.getElementById('existing-dims');
@@ -551,11 +1020,16 @@ function dimStatus(msg, cls) {
     (cls === 'ok' ? '#e6f4ea;color:#2e6e40;border:1px solid #b6dfbc' : '#fdecea;color:#8b1a1a;border:1px solid #f5c2c0') + ';';
 }
 
+// ── Utilities ─────────────────────────────────────────────────────────────────
+
 function esc(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-window.addEventListener('load', loadDimensions);
+window.addEventListener('load', function() {
+  loadDimensions();
+  loadPerformerOptions();
+});
 </script>
 </body>
 </html>
